@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Affiliates Initial Bonus
  * Plugin URI: http://www.netpad.gr
- * Description: Give your affiliates an initial bonus upon first referral
+ * Description: Grant your affiliates an initial bonus upon first referral
  * Version: 1.0
  * Author: George Tsiokos
  * Author URI: http://www.netpad.gr
