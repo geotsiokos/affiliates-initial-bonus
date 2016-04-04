@@ -33,7 +33,7 @@ add_action( 'admin_notices', 'aib_check_dependencies' );
 function aib_check_dependencies () {
 	$active_plugins = get_option( 'active_plugins', array() );
 	$affiliates_is_active = in_array( 'affiliates/affiliates.php', $active_plugins ) || in_array( 'affiliates-pro/affiliates-pro.php', $active_plugins ) || in_array( 'affiliates-enterprise/affiliates-enterprise.php', $active_plugins );
-	$woocommerce_is_active = in_array( 'woocommerce/woocommerce.php');
+	$woocommerce_is_active = in_array( 'woocommerce/woocommerce.php', $active_plugins );
 	
 	if ( !$affiliates_is_active ) {
 		echo "<div class='error'><strong>Affiliates Initial Bonus</strong> plugin requires one of the <a href='http://wordpress.org/plugins/affiliates/'>Affiliates</a>, <a href='http://www.itthinx.com/shop/affiliates-pro/'>Affiliates Pro</a> or <a href='http://www.itthinx.com/shop/affiliates-enterprise/'>Affiliates Enterprise</a> plugins to be installed and activated.</div>";
