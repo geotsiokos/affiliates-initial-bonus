@@ -33,10 +33,15 @@ add_action( 'admin_notices', 'aib_check_dependencies' );
 function aib_check_dependencies () {
 	$active_plugins = get_option( 'active_plugins', array() );
 	$affiliates_is_active = in_array( 'affiliates/affiliates.php', $active_plugins ) || in_array( 'affiliates-pro/affiliates-pro.php', $active_plugins ) || in_array( 'affiliates-enterprise/affiliates-enterprise.php', $active_plugins );
+	$woocommerce_is_active = in_array( 'woocommerce/woocommerce.php');
 	
 	if ( !$affiliates_is_active ) {
 		echo "<div class='error'><strong>Affiliates Initial Bonus</strong> plugin requires one of the <a href='http://wordpress.org/plugins/affiliates/'>Affiliates</a>, <a href='http://www.itthinx.com/shop/affiliates-pro/'>Affiliates Pro</a> or <a href='http://www.itthinx.com/shop/affiliates-enterprise/'>Affiliates Enterprise</a> plugins to be installed and activated.</div>";
-	}	
+	}
+
+	if ( !$woocommerce_is_active ) { 
+		echo "<div class='error'><strong>Affiliates Initial Bonus</strong> plugin requires <a href='http://wordpress.org/plugins/woocommerce/'>woocommerce</a> plugin to be installed and activated.</div>";
+	}
 }
 
 add_action( 'affiliates_referral', 'affiliates_referral_initial_bonus', 10, 2 );
@@ -44,16 +49,19 @@ add_action( 'affiliates_referral', 'affiliates_referral_initial_bonus', 10, 2 );
 function affiliates_referral_initial_bonus( $referral_id, $params ) {
 
 	$description = "Initial Referral Bonus";
-	$amount = 10;
-	$currency_id = "USD";
-	$status = get_option( 'aff_default_referral_status' ) ? get_option( 'aff_default_referral_status' ) : "pending";
+	$rate = 0.12;
+	$currency_id = get_option( 'woocommerce_currency' );
+	$aff_default_referral_status = get_option( 'aff_default_referral_status' ) ? get_option( 'aff_default_referral_status' ) : "pending";
 	$type = "initial bonus";
 	$reference = "";
 	$aff_id = $params['affiliate_id'];
-	$total_referrals = affiliates_get_affiliate_referrals( $aff_id, $from_date = null , $thru_date = null, $status = null, $precise = false );
+	$total_referrals = affiliates_get_affiliate_referrals( $aff_id, $from_date = null , $thru_date = null, $status = $aff_default_referral_status, $precise = false );
 
-	if ( $total_referrals < 2 ) {
+	if ( $total_referrals == 1 || $total_referrals == '1' ) {
+		$amount = bcmul( $rate, $params['base_amount'], 2 );
 		affiliates_add_referral( $aff_id, null, $description, null, $amount, $currency_id, $status = null, $type = null, $reference = null );
+	} else {
+		return;
 	}
 
 }
