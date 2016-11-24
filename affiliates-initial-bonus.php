@@ -57,19 +57,20 @@ function affiliates_referral_initial_bonus( $referral_id, $params ) {
 	$bonus_amount = BONUS_AMOUNT;
 	$currency_id = get_option( 'woocommerce_currency' );
 	$aff_default_referral_status = get_option( 'aff_default_referral_status' ) ? get_option( 'aff_default_referral_status' ) : "pending";
-	$type = "initial bonus";
-	$reference = "";
+	$type = "initial bonus for " . $referral_id;
+	$reference = "initial bonus for " . $referral_id;
+	$data = null;
 	$aff_id = $params['affiliate_id'];
 	$total_referrals = affiliates_get_affiliate_referrals( $aff_id, $from_date = null , $thru_date = null, $status = $aff_default_referral_status, $precise = false );
 	
-
 	if ( $total_referrals < 2 ) {
 		if ( isset( $params['base_amount'] ) ) {
 			$amount = bcmul( $bonus_rate, $params['base_amount'], 2 );
 		} else {
 			$amount = bcmul( $bonus_amount, 1, 2 );
 		}
-		affiliates_add_referral( $aff_id, $post_id, $description, null, $amount, $currency_id, $status = null, $type = null, $reference = null );
+	
+		affiliates_add_referral( $aff_id, $post_id, $description, $data, $amount, $currency_id, $aff_default_referral_status, $type, $reference );
 	} else {
 		return;
 	}
