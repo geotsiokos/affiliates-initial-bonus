@@ -1,2 +1,2 @@
 # affiliates-initial-bonus
-Grant your affiliates with a bonus upon first referral
+Grant your affiliates a bonus upon first referral
