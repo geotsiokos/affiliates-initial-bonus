@@ -28,6 +28,9 @@ if ( !defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+const BONUS_RATE = 0.12;
+const BONUS_AMOUNT = 10; // The bonus amount granted to the respective affiliate
+
 add_action( 'admin_notices', 'aib_check_dependencies' );
 
 function aib_check_dependencies () {
@@ -48,18 +51,25 @@ add_action( 'affiliates_referral', 'affiliates_referral_initial_bonus', 10, 2 );
 
 function affiliates_referral_initial_bonus( $referral_id, $params ) {
 
-	$description = "Initial Referral Bonus";
-	$rate = 0.12;
+	$post_id = $params['post_id'];
+	$description = "Referral Bonus";
+	$bonus_rate = BONUS_RATE;
+	$bonus_amount = BONUS_AMOUNT;
 	$currency_id = get_option( 'woocommerce_currency' );
 	$aff_default_referral_status = get_option( 'aff_default_referral_status' ) ? get_option( 'aff_default_referral_status' ) : "pending";
 	$type = "initial bonus";
 	$reference = "";
 	$aff_id = $params['affiliate_id'];
 	$total_referrals = affiliates_get_affiliate_referrals( $aff_id, $from_date = null , $thru_date = null, $status = $aff_default_referral_status, $precise = false );
+	
 
-	if ( $total_referrals == 1 || $total_referrals == '1' ) {
-		$amount = bcmul( $rate, $params['base_amount'], 2 );
-		affiliates_add_referral( $aff_id, null, $description, null, $amount, $currency_id, $status = null, $type = null, $reference = null );
+	if ( $total_referrals < 2 ) {
+		if ( isset( $params['base_amount'] ) ) {
+			$amount = bcmul( $bonus_rate, $params['base_amount'], 2 );
+		} else {
+			$amount = bcmul( $bonus_amount, 1, 2 );
+		}
+		affiliates_add_referral( $aff_id, $post_id, $description, null, $amount, $currency_id, $status = null, $type = null, $reference = null );
 	} else {
 		return;
 	}
