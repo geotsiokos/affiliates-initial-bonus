@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Affiliates Referral Bonus
+ * Plugin Name: Affiliates Initial Bonus
  * Plugin URI: http://www.netpad.gr
  * Description: Grant your affiliates a bonus upon first referral
  * Version: 1.0
